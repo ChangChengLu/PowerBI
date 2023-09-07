@@ -27,7 +27,7 @@ import java.util.List;
  * 用户接口
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 @RestController
 @RequestMapping("/user")

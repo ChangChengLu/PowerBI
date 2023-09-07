@@ -17,7 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * 请求响应日志 AOP
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  **/
 @Aspect
 @Component

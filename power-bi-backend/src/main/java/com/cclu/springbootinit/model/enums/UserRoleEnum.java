@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ObjectUtils;
  * 用户角色枚举
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public enum UserRoleEnum {
 

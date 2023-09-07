@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * SQL 工具
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public class SqlUtils {
 

@@ -4,7 +4,7 @@ package com.cclu.springbootinit.common;
  * 返回工具类
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public class ResultUtils {
 

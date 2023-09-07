@@ -4,7 +4,7 @@ package com.cclu.springbootinit.constant;
  * 用户常量
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public interface UserConstant {
 

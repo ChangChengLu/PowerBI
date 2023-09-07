@@ -7,7 +7,7 @@ import com.cclu.springbootinit.model.entity.User;
  * 用户数据库操作
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public interface UserMapper extends BaseMapper<User> {
 

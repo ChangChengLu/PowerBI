@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * 用户服务
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public interface UserService extends IService<User> {
 

@@ -31,7 +31,7 @@ import static com.cclu.springbootinit.constant.UserConstant.USER_LOGIN_STATE;
  * 用户服务实现
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 @Service
 @Slf4j

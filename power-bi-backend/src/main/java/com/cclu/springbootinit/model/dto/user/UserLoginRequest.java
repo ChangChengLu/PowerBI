@@ -7,7 +7,7 @@ import lombok.Data;
  * 用户登录请求
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 @Data
 public class UserLoginRequest implements Serializable {

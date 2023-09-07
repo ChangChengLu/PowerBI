@@ -6,7 +6,7 @@ import com.cclu.springbootinit.common.ErrorCode;
  * 自定义异常类
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public class BusinessException extends RuntimeException {
 

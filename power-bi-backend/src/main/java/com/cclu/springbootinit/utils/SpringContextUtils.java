@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Spring 上下文获取工具
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * 权限校验
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

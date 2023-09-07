@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
  * 网络工具类
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 public class NetUtils {
 

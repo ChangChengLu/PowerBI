@@ -1,25 +1,38 @@
 package com.cclu.springbootinit.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cclu.springbootinit.annotation.AuthCheck;
 import com.cclu.springbootinit.common.BaseResponse;
 import com.cclu.springbootinit.common.DeleteRequest;
 import com.cclu.springbootinit.common.ErrorCode;
 import com.cclu.springbootinit.common.ResultUtils;
+import com.cclu.springbootinit.constant.CommonConstant;
 import com.cclu.springbootinit.constant.UserConstant;
 import com.cclu.springbootinit.exception.BusinessException;
 import com.cclu.springbootinit.exception.ThrowUtils;
+import com.cclu.springbootinit.manager.AiManager;
+import com.cclu.springbootinit.manager.RedisLimiterManager;
 import com.cclu.springbootinit.model.dto.chart.ChartAddRequest;
 import com.cclu.springbootinit.model.dto.chart.ChartQueryRequest;
 import com.cclu.springbootinit.model.dto.chart.ChartUpdateRequest;
+import com.cclu.springbootinit.model.dto.chart.GenChartByAiRequest;
 import com.cclu.springbootinit.model.entity.Chart;
+import com.cclu.springbootinit.model.entity.User;
+import com.cclu.springbootinit.model.vo.BiResponseVO;
 import com.cclu.springbootinit.service.ChartService;
+import com.cclu.springbootinit.service.UserService;
+import com.cclu.springbootinit.utils.ExcelUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author ChangCheng Lu
@@ -32,6 +45,16 @@ public class ChartController {
 
     @Resource
     private ChartService chartService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private RedisLimiterManager redisLimiterManager;
+
+    @Resource
+    private AiManager aiManager;
+
 
     // region 增删改查
 
@@ -130,5 +153,78 @@ public class ChartController {
     }
 
     // endregion
+
+    /**
+     * 智能分析（同步）
+     *
+     * @param multipartFile
+     * @param genChartByAiRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/gen")
+    public BaseResponse<BiResponseVO> genChartByAi(@RequestPart("file") MultipartFile multipartFile,
+                                                   GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+        String name = genChartByAiRequest.getName();
+        String goal = genChartByAiRequest.getGoal();
+        String chartType = genChartByAiRequest.getChartType();
+        // 校验
+        ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空");
+        ThrowUtils.throwIf(StringUtils.isNotBlank(name) && name.length() > 100, ErrorCode.PARAMS_ERROR, "名称过长");
+        // 校验文件
+        long size = multipartFile.getSize();
+        String originalFilename = multipartFile.getOriginalFilename();
+        // 校验文件大小
+        final long ONE_MB = 1024 * 1024L;
+        ThrowUtils.throwIf(size > ONE_MB, ErrorCode.PARAMS_ERROR, "文件超过 1M");
+        // 校验文件后缀
+        String suffix = FileUtil.getSuffix(originalFilename);
+        final List<String> validateSuffixList = Arrays.asList("xlsx");
+        ThrowUtils.throwIf(!validateSuffixList.contains(suffix), ErrorCode.PARAMS_ERROR, "文件后缀非法");
+
+        User loginUser = userService.getLoginUser(request);
+        // 限流判断，每个用户一个限流器
+        redisLimiterManager.doRateLimit("genChartByAi_" + loginUser.getId());
+
+        // 构造用户输入
+        StringBuilder userInput = new StringBuilder();
+        userInput.append("分析需求：").append("\n");
+
+        // 拼接分析目标
+        String userGoal = goal;
+        if (StringUtils.isNotBlank(chartType)) {
+            userGoal += "，请使用" + chartType;
+        }
+        userInput.append(userGoal).append("\n");
+        userInput.append("原始数据：").append("\n");
+        // 压缩后的数据
+        String csvData = ExcelUtils.excelToCsv(multipartFile);
+        userInput.append(csvData).append("\n");
+
+        long biModelId = CommonConstant.BI_MODEL_ID;
+        String result = aiManager.doChat(biModelId, userInput.toString());
+        String[] splits = result.split("【【【【【");
+        if (splits.length < 3) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "AI 生成错误");
+        }
+        String genChart = splits[1].trim();
+        String genResult = splits[2].trim();
+        // 插入到数据库
+        Chart chart = new Chart();
+        chart.setName(name);
+        chart.setGoal(goal);
+        chart.setChartData(csvData);
+        chart.setChartType(chartType);
+        chart.setGenChart(genChart);
+        chart.setGenResult(genResult);
+        chart.setUserId(loginUser.getId());
+        boolean saveResult = chartService.save(chart);
+        ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图表保存失败");
+        BiResponseVO biResponse = new BiResponseVO();
+        biResponse.setGenChart(genChart);
+        biResponse.setGenResult(genResult);
+        biResponse.setChartId(chart.getId());
+        return ResultUtils.success(biResponse);
+    }
 
 }

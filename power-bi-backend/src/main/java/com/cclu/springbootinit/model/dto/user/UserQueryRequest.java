@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * 用户查询请求
  *
  * @author ChangChengLu
- * @from https://github.com/changchenglu>
+ * @from https://github.com/ChangChengLu>
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
