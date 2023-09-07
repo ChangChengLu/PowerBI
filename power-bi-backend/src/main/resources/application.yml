@@ -3,7 +3,7 @@
 # @from https://github.com/changchenglu
 spring:
   application:
-    name: springboot-init
+    name: power-bi
   # 默认 dev 环境
   profiles:
     active: dev
@@ -21,7 +21,7 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_db
+    url: jdbc:mysql://localhost:3306/power_bi
     username: root
     password: 123456
   # Redis 配置

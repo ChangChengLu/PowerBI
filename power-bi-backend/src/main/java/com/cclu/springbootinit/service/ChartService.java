@@ -1,5 +1,7 @@
 package com.cclu.springbootinit.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cclu.springbootinit.model.dto.chart.ChartQueryRequest;
 import com.cclu.springbootinit.model.entity.Chart;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -9,5 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2023-09-05 21:21:00
 */
 public interface ChartService extends IService<Chart> {
+
+    /**
+     * 获取查询包装类
+     *
+     * @param chartQueryRequest
+     * @return
+     */
+    QueryWrapper<Chart> getQueryWrapper(ChartQueryRequest chartQueryRequest);
 
 }
