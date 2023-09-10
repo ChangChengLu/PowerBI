@@ -152,6 +152,17 @@ public class ChartController {
         return ResultUtils.success(chartPage);
     }
 
+    @PostMapping("/list/my/page")
+    @AuthCheck
+    public BaseResponse<Page<Chart>> listMyChartByPage(@RequestBody ChartQueryRequest chartQueryRequest,
+                                                       HttpServletRequest request) {
+        long current = chartQueryRequest.getCurrent();
+        long size = chartQueryRequest.getPageSize();
+        Page<Chart> chartPage = chartService.page(new Page<>(current, size),
+                chartService.getQueryWrapper(chartQueryRequest));
+        return ResultUtils.success(chartPage);
+    }
+
     // endregion
 
     /**
