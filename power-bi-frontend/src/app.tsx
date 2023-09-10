@@ -10,6 +10,7 @@ import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import React from 'react';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
+import {getLoginUserUsingGET} from "@/services/power-bi/userController";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registryPath = '/user/registry';
@@ -18,17 +19,12 @@ const registryPath = '/user/registry';
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<{
-  settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
-  loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  currentUser?: API.LoginUserVO;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      return msg.data;
+      const res = await getLoginUserUsingGET();
+      return res.data;
     } catch (error) {
       history.push(loginPath);
     }
@@ -39,15 +35,11 @@ export async function getInitialState(): Promise<{
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
     return {
-      fetchUserInfo,
       currentUser,
-      settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
-  return {
-    fetchUserInfo,
-    settings: defaultSettings as Partial<LayoutSettings>,
-  };
+
+  return {};
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
@@ -55,14 +47,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatar,
+      src: initialState?.currentUser?.userAvatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.userName,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {

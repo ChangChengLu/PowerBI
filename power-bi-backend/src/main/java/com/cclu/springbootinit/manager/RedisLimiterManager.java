@@ -2,7 +2,6 @@ package com.cclu.springbootinit.manager;
 
 import com.cclu.springbootinit.common.ErrorCode;
 import com.cclu.springbootinit.exception.BusinessException;
-import org.redisson.Redisson;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
@@ -18,7 +17,8 @@ import javax.annotation.Resource;
 @Service
 public class RedisLimiterManager {
 
-    private final RedissonClient redissonClient = Redisson.create();
+    @Resource
+    private RedissonClient redissonClient;
 
     /**
      * 限流操作
