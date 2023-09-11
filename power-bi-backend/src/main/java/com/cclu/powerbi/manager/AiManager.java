@@ -1,7 +1,7 @@
-package com.cclu.springbootinit.manager;
+package com.cclu.powerbi.manager;
 
-import com.cclu.springbootinit.common.ErrorCode;
-import com.cclu.springbootinit.exception.BusinessException;
+import com.cclu.powerbi.common.ErrorCode;
+import com.cclu.powerbi.exception.BusinessException;
 import com.yupi.yucongming.dev.client.YuCongMingClient;
 import com.yupi.yucongming.dev.common.BaseResponse;
 import com.yupi.yucongming.dev.model.DevChatRequest;
