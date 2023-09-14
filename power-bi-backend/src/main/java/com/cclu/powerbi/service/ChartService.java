@@ -20,4 +20,12 @@ public interface ChartService extends IService<Chart> {
      */
     QueryWrapper<Chart> getQueryWrapper(ChartQueryRequest chartQueryRequest);
 
+
+    /**
+     * 图表错误处理
+     * @param chartId
+     * @param execMessage
+     */
+    void handleChartUpdateError(long chartId, String execMessage);
+
 }

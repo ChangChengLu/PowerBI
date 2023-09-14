@@ -25,7 +25,6 @@ public class MyMessageConsumer {
     @SneakyThrows
     @RabbitListener(queues = {"code_queue"}, ackMode = "MANUAL")
     public void receiveMessage(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) {
-        System.out.println(message);
         log.info("receiveMessage message = {}", message);
         channel.basicAck(deliveryTag, false);
     }
